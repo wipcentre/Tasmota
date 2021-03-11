@@ -2002,7 +2002,7 @@ void HandleWipConfiguration(void)
   WSContentSendStyle();
 
   TemplateJson();
-  WSContentSend_P(HTTP_FORM_WIP,SettingsText(SET_SENSOR_WIP),SettingsText(SET_MIN_WIP),SettingsText(SET_MAX_WIP));
+  WSContentSend_P(HTTP_FORM_WIP,Settings.sensor_min_wip,Settings.sensor_max_wip,Settings.sensor_name_wip);
 
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
@@ -2013,7 +2013,7 @@ void WipSaveSettings(void)
 {
   char mx[10];
   char mn[10]; 
-  char sn[10];  
+  char sn[21];  
   char message[MAX_LOGSZ];
 
   WebGetArg(PSTR("mx"), mx, sizeof(mx));
@@ -2031,9 +2031,9 @@ void WipSaveSettings(void)
   ExecuteWebCommand("RULE1 1", SRC_WEBGUI);
   AddLogData(LOG_LEVEL_INFO, message);
 
-  SettingsUpdateText(SET_SENSOR_WIP, sn);
-  SettingsUpdateText(SET_MIN_WIP, mn);
-  SettingsUpdateText(SET_MAX_WIP, mx);
+  Settings.sensor_min_wip = (uint16_t)atoi(mn);
+  Settings.sensor_max_wip = (uint16_t)atoi(mx);
+  strcpy(Settings.sensor_name_wip , sn);
 }
 
 /*-------------------------------------------------------------------------------------------*/

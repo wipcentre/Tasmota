@@ -339,7 +339,7 @@ typedef union {
   };
 } DisplayOptions;
 
-const uint32_t settings_text_size = 702;   // Settings.text_pool[size] = Settings.display_model (2D2) - Settings.text_pool (017)
+const uint32_t settings_text_size = 699;   // Settings.text_pool[size] = Settings.display_model (2D2) - Settings.text_pool (017)
 const uint8_t MAX_TUYA_FUNCTIONS = 16;
 
 struct {
@@ -355,7 +355,7 @@ struct {
 
   // Start of char array storing all parameter strings ********
 
-  char          text_pool[141];            // 017  Size is settings_text_size
+  char          text_pool[138];            // 017  Size is settings_text_size
   char          ex_sta_ssid[2][33];        // 0A1
   char          ex_sta_pwd[2][65];         // 0E3
   uint8_t       text_pool_165[132];        // 165
@@ -388,7 +388,11 @@ struct {
   uint8_t       display_font;              // 312
   DisplayOptions  display_options;         // 313
 
-  uint8_t       free_314[43];              // 314
+  uint8_t       free_314[18];              // 314
+
+  uint16_t       sensor_max_wip;
+  uint16_t       sensor_min_wip;
+  char          sensor_name_wip[21];
 
   uint8_t       tuyamcu_topic;             // 33F  Manage tuyaSend topic. ex_energy_power_delta on 6.6.0.20, replaced on 8.5.0.1
   uint16_t      domoticz_update_timer;     // 340
