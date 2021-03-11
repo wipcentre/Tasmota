@@ -214,11 +214,11 @@ const char HTTP_HEAD_STYLE3[] PROGMEM =
   "<div style='text-align:center;color:#%06x;'><h3>" D_MINIMAL_FIRMWARE_PLEASE_UPGRADE "</h3></div>"  // COLOR_TEXT_WARNING
 #endif
   "<div style='text-align:center;color:#%06x;'><noscript>" D_NOSCRIPT "<br></noscript>" // COLOR_TITLE
-#ifdef LANGUAGE_MODULE_NAME
+/*#ifdef LANGUAGE_MODULE_NAME
   "<h3>" D_MODULE " %s</h3>"
 #else
   "<h3>%s " D_MODULE "</h3>"
-#endif
+#endif*/
   "<h2>%s</h2>";
 
 const char HTTP_MSG_SLIDER_GRADIENT[] PROGMEM =
@@ -233,31 +233,31 @@ const char HTTP_MSG_RSTRT[] PROGMEM =
   "<br><div style='text-align:center;'>" D_DEVICE_WILL_RESTART "</div><br>";
 
 const char HTTP_FORM_LOGIN[] PROGMEM =
-  "<fieldset>"
+  "<div style='border:1px solid gray;padding:10px 24px;'>"
   "<form method='post' action='/'>"
   "<p><b>" D_USER "</b><br><input name='USER1' placeholder='" D_USER "'></p>"
   "<p><b>" D_PASSWORD "</b><br><input name='PASS1' type='password' placeholder='" D_PASSWORD "'></p>"
   "<br>"
   "<button>" D_OK "</button>"
-  "</form></fieldset>";
+  "</form></div>";
 
 const char HTTP_FORM_TEMPLATE[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_TEMPLATE_PARAMETERS "&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_TEMPLATE_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='tp'>";
 const char HTTP_FORM_TEMPLATE_FLAG[] PROGMEM =
   "<p></p>"  // Keep close so do not use <br>
-  "<fieldset><legend><b>&nbsp;" D_TEMPLATE_FLAGS "&nbsp;</b></legend><p>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_TEMPLATE_FLAGS "&nbsp;</b></legend><p>"
 //  "<label><input id='c0' name='c0' type='checkbox'><b>" D_OPTION_TEXT "</b></label><br>"
-  "</p></fieldset>";
+  "</p></div>";
 
 const char HTTP_FORM_MODULE[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_MODULE_PARAMETERS "&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_MODULE_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='md'>"
   "<p></p><b>" D_MODULE_TYPE "</b> (%s)<br><select id='g99'></select><br>"
   "<br><table>";
 
 const char HTTP_FORM_WIFI[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_WIFI_PARAMETERS "&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_WIFI_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='wi'>"
   "<p><b>" D_AP1_SSID "</b> (" STA_SSID1 ")<br><input id='s1' placeholder=\"" STA_SSID1 "\" value=\"%s\"></p>"  // Need \" instead of ' to be able to use ' in text (#8489)
   "<p><label><b>" D_AP1_PASSWORD "</b><input type='checkbox' onclick='sp(\"p1\")'></label><br><input id='p1' type='password' placeholder=\"" D_AP1_PASSWORD "\" value=\"" D_ASTERISK_PWD "\"></p>"
@@ -267,7 +267,7 @@ const char HTTP_FORM_WIFI[] PROGMEM =
   "<p><b>" D_CORS_DOMAIN "</b><input id='c' placeholder=\"" CORS_DOMAIN "\" value=\"%s\"></p>";
 
 const char HTTP_FORM_LOG1[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_LOGGING_PARAMETERS "&nbsp;</b>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_LOGGING_PARAMETERS "&nbsp;</b>"
   "</legend><form method='get' action='lg'>";
 const char HTTP_FORM_LOG2[] PROGMEM =
   "<p><b>" D_SYSLOG_HOST "</b> (" SYS_LOG_HOST ")<br><input id='lh' placeholder=\"" SYS_LOG_HOST "\" value=\"%s\"></p>"
@@ -275,13 +275,13 @@ const char HTTP_FORM_LOG2[] PROGMEM =
   "<p><b>" D_TELEMETRY_PERIOD "</b> (" STR(TELE_PERIOD) ")<br><input id='lt' placeholder='" STR(TELE_PERIOD) "' value='%d'></p>";
 
 const char HTTP_FORM_OTHER[] PROGMEM =
-  "<fieldset><legend><b>&nbsp;" D_OTHER_PARAMETERS "&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_OTHER_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='co'>"
   "<p></p>"
-  "<fieldset><legend><b>&nbsp;" D_TEMPLATE "&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_TEMPLATE "&nbsp;</b></legend>"
   "<p><input id='t1' placeholder=\"" D_TEMPLATE "\" value='%s'></p>"  // We need ' apostrophe here as the template contains " quotation mark
   "<p><label><input id='t2' type='checkbox'%s><b>" D_ACTIVATE "</b></label></p>"
-  "</fieldset>"
+  "</div>"
   "<br>"
   "<label><b>" D_WEB_ADMIN_PASSWORD "</b><input type='checkbox' onclick='sp(\"wp\")'></label><br><input id='wp' type='password' placeholder=\"" D_WEB_ADMIN_PASSWORD "\" value=\"" D_ASTERISK_PWD "\"><br>"
   "<br>"
@@ -290,27 +290,36 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<label><b>" D_DEVICE_NAME "</b> (%s)</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
   "<br>";
 
+  const char HTTP_FORM_WIP[] PROGMEM =
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;Sensor&nbsp;</b></legend>"
+  "<form method='get' action='wk'>"
+  "<br>"
+  "<label>Max Value</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
+  "<br>"
+  "<label>Min Value</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
+  "<br>";
+
 const char HTTP_FORM_END[] PROGMEM =
   "<br>"
   "<button name='save' type='submit' class='button bgrn'>" D_SAVE "</button>"
-  "</form></fieldset>";
+  "</form></div>";
 
 const char HTTP_FORM_RST[] PROGMEM =
   "<div id='f1' style='display:block;'>"
-  "<fieldset><legend><b>&nbsp;" D_RESTORE_CONFIGURATION "&nbsp;</b></legend>";
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_RESTORE_CONFIGURATION "&nbsp;</b></legend>";
 const char HTTP_FORM_UPG[] PROGMEM =
   "<div id='f1' style='display:block;'>"
-  "<fieldset><legend><b>&nbsp;" D_UPGRADE_BY_WEBSERVER "&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_UPGRADE_BY_WEBSERVER "&nbsp;</b></legend>"
   "<form method='get' action='u1'>"
   "<br><b>" D_OTA_URL "</b><br><input id='o' placeholder=\"OTA_URL\" value=\"%s\"><br>"
   "<br><button type='submit'>" D_START_UPGRADE "</button></form>"
-  "</fieldset><br><br>"
-  "<fieldset><legend><b>&nbsp;" D_UPGRADE_BY_FILE_UPLOAD "&nbsp;</b></legend>";
+  "</div><br><br>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_UPGRADE_BY_FILE_UPLOAD "&nbsp;</b></legend>";
 const char HTTP_FORM_RST_UPG[] PROGMEM =
   "<form method='post' action='u2' enctype='multipart/form-data'>"
   "<br><input type='file' name='u2'><br>"
   "<br><button type='submit' onclick='eb(\"f1\").style.display=\"none\";eb(\"f2\").style.display=\"block\";this.form.submit();'>" D_START " %s</button></form>"
-  "</fieldset>"
+  "</div>"
   "</div>"
   "<div id='f2' style='display:none;text-align:center;'><b>" D_UPLOAD_STARTED " ...</b></div>";
 
@@ -328,7 +337,7 @@ const char HTTP_COUNTER[] PROGMEM =
   "<br><div id='t' style='text-align:center;'></div>";
 
 const char HTTP_END[] PROGMEM =
-  "<div style='text-align:right;font-size:11px;'><hr/><a href='https://bit.ly/tasmota' target='_blank' style='color:#aaa;'>Tasmota %s " D_BY " Theo Arends</a></div>"
+  "<div style='text-align:center;font-size:11px;margin-top:24px;'><a href='https://wipcentre.com' target='_blank' style='color:#aaa;'>Wifi Sensor %s " D_BY " WIP - Technology Centre</a></div>"
   "</div>"
   "</body>"
   "</html>";
@@ -339,15 +348,15 @@ const char HTTP_DEVICE_STATE[] PROGMEM = "<td style='width:%d{c}%s;font-size:%dp
 enum ButtonTitle {
   BUTTON_RESTART, BUTTON_RESET_CONFIGURATION,
   BUTTON_MAIN, BUTTON_CONFIGURATION, BUTTON_INFORMATION, BUTTON_FIRMWARE_UPGRADE, BUTTON_CONSOLE,
-  BUTTON_MODULE, BUTTON_WIFI, BUTTON_LOGGING, BUTTON_OTHER, BUTTON_TEMPLATE, BUTTON_BACKUP, BUTTON_RESTORE };
+  BUTTON_WIP, BUTTON_MODULE, BUTTON_WIFI, BUTTON_LOGGING, BUTTON_OTHER, BUTTON_TEMPLATE, BUTTON_BACKUP, BUTTON_RESTORE };
 const char kButtonTitle[] PROGMEM =
   D_RESTART "|" D_RESET_CONFIGURATION "|"
   D_MAIN_MENU "|" D_CONFIGURATION "|" D_INFORMATION "|" D_FIRMWARE_UPGRADE "|" D_CONSOLE "|"
-  D_CONFIGURE_MODULE "|" D_CONFIGURE_WIFI"|" D_CONFIGURE_LOGGING "|" D_CONFIGURE_OTHER "|" D_CONFIGURE_TEMPLATE "|" D_BACKUP_CONFIGURATION "|" D_RESTORE_CONFIGURATION;
+  D_CONFIGURE_WIP "|" D_CONFIGURE_MODULE "|" D_CONFIGURE_WIFI"|" D_CONFIGURE_LOGGING "|" D_CONFIGURE_OTHER "|" D_CONFIGURE_TEMPLATE "|" D_BACKUP_CONFIGURATION "|" D_RESTORE_CONFIGURATION;
 const char kButtonAction[] PROGMEM =
   ".|rt|"
   ".|cn|in|up|cs|"
-  "md|wi|lg|co|tp|dl|rs";
+  "wk|md|wi|lg|co|tp|dl|rs|wk";
 const char kButtonConfirm[] PROGMEM = D_CONFIRM_RESTART "|" D_CONFIRM_RESET_CONFIGURATION;
 
 enum CTypes { CT_HTML, CT_PLAIN, CT_XML, CT_STREAM, CT_APP_JSON, CT_APP_STREAM };
@@ -430,6 +439,7 @@ const WebServerDispatch_t WebServerDispatch[] PROGMEM = {
   { "lg", HTTP_ANY, HandleLoggingConfiguration },
   { "tp", HTTP_ANY, HandleTemplateConfiguration },
   { "co", HTTP_ANY, HandleOtherConfiguration },
+  { "wk", HTTP_ANY, HandleWipConfiguration },
   { "dl", HTTP_ANY, HandleBackupConfiguration },
   { "rs", HTTP_ANY, HandleRestoreConfiguration },
   { "rt", HTTP_ANY, HandleResetConfiguration },
@@ -746,8 +756,7 @@ void WSContentSendStyle_P(const char* formatP, ...)
 #ifdef FIRMWARE_MINIMAL
   WebColor(COL_TEXT_WARNING),
 #endif
-  WebColor(COL_TITLE),
-  ModuleName().c_str(), SettingsText(SET_DEVICENAME));
+  WebColor(COL_TITLE), SettingsText(SET_DEVICENAME));
   if (Settings.flag3.gui_hostname_ip) {                // SetOption53 - Show hostanme and IP address in GUI main menu
     bool lip = (static_cast<uint32_t>(WiFi.localIP()) != 0);
     bool sip = (static_cast<uint32_t>(WiFi.softAPIP()) != 0);
@@ -1300,6 +1309,7 @@ void HandleConfiguration(void)
   WSContentStart_P(PSTR(D_CONFIGURATION));
   WSContentSendStyle();
 
+  WSContentButton(BUTTON_WIP);
   WSContentButton(BUTTON_MODULE);
   WSContentButton(BUTTON_WIFI);
 
@@ -1911,7 +1921,7 @@ void HandleOtherConfiguration(void)
 
 #ifdef USE_EMULATION
 #if defined(USE_EMULATION_WEMO) || defined(USE_EMULATION_HUE)
-  WSContentSend_P(PSTR("<p></p><fieldset><legend><b>&nbsp;" D_EMULATION "&nbsp;</b></legend><p>"));  // Keep close to Friendlynames so do not use <br>
+  WSContentSend_P(PSTR("<p></p><div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;" D_EMULATION "&nbsp;</b></legend><p>"));  // Keep close to Friendlynames so do not use <br>
   for (uint32_t i = 0; i < EMUL_MAX; i++) {
 #ifndef USE_EMULATION_WEMO
     if (i == EMUL_WEMO) { i++; }
@@ -1927,7 +1937,7 @@ void HandleOtherConfiguration(void)
         (i == EMUL_NONE) ? "" : (i == EMUL_WEMO) ? PSTR(D_SINGLE_DEVICE) : PSTR(D_MULTI_DEVICE));
     }
   }
-  WSContentSend_P(PSTR("</p></fieldset>"));
+  WSContentSend_P(PSTR("</p></div>"));
 #endif  // USE_EMULATION_WEMO || USE_EMULATION_HUE
 #endif  // USE_EMULATION
 
@@ -1937,6 +1947,73 @@ void HandleOtherConfiguration(void)
 }
 
 void OtherSaveSettings(void)
+{
+  char tmp[300];   // Needs to hold complete ESP32 template of minimal 230 chars
+  char webindex[5];
+  char friendlyname[TOPSZ];
+  char message[MAX_LOGSZ];
+
+  WebGetArg(PSTR("dn"), tmp, sizeof(tmp));
+  SettingsUpdateText(SET_DEVICENAME, (!strlen(tmp)) ? "" : (!strcmp(tmp,"1")) ? SettingsText(SET_FRIENDLYNAME1) : tmp);
+  WebGetArg(PSTR("wp"), tmp, sizeof(tmp));
+  SettingsUpdateText(SET_WEBPWD, (!strlen(tmp)) ? "" : (strchr(tmp,'*')) ? SettingsText(SET_WEBPWD) : tmp);
+  Settings.flag.mqtt_enabled = Webserver->hasArg(F("b1"));  // SetOption3 - Enable MQTT
+#ifdef USE_EMULATION
+  UdpDisconnect();
+#if defined(USE_EMULATION_WEMO) || defined(USE_EMULATION_HUE)
+  WebGetArg(PSTR("b2"), tmp, sizeof(tmp));
+  Settings.flag2.emulation = (!strlen(tmp)) ? 0 : atoi(tmp);
+#endif  // USE_EMULATION_WEMO || USE_EMULATION_HUE
+#endif  // USE_EMULATION
+
+  snprintf_P(message, sizeof(message), PSTR(D_LOG_OTHER D_MQTT_ENABLE " %s, " D_CMND_EMULATION " %d, " D_CMND_DEVICENAME " %s, " D_CMND_FRIENDLYNAME),
+    GetStateText(Settings.flag.mqtt_enabled), Settings.flag2.emulation, SettingsText(SET_DEVICENAME));
+  for (uint32_t i = 0; i < MAX_FRIENDLYNAMES; i++) {
+    snprintf_P(webindex, sizeof(webindex), PSTR("a%d"), i);
+    WebGetArg(webindex, tmp, sizeof(tmp));
+    snprintf_P(friendlyname, sizeof(friendlyname), PSTR(FRIENDLY_NAME"%d"), i +1);
+    SettingsUpdateText(SET_FRIENDLYNAME1 +i, (!strlen(tmp)) ? (i) ? friendlyname : PSTR(FRIENDLY_NAME) : tmp);
+    snprintf_P(message, sizeof(message), PSTR("%s%s %s"), message, (i) ? "," : "", SettingsText(SET_FRIENDLYNAME1 +i));
+  }
+  AddLogData(LOG_LEVEL_INFO, message);
+
+  WebGetArg(PSTR("t1"), tmp, sizeof(tmp));
+  if (strlen(tmp)) {  // {"NAME":"12345678901234","GPIO":[255,255,255,255,255,255,255,255,255,255,255,255,255],"FLAG":255,"BASE":255}
+    snprintf_P(message, sizeof(message), PSTR(D_CMND_BACKLOG " " D_CMND_TEMPLATE " %s%s"), tmp, (Webserver->hasArg(F("t2"))) ? PSTR("; " D_CMND_MODULE " 0") : "");
+    ExecuteWebCommand(message, SRC_WEBGUI);
+  }
+}
+
+/*-------------------------------------------------------------------------------------------*/
+
+void HandleWipConfiguration(void)
+{
+  if (!HttpCheckPriviledgedAccess()) { return; }
+
+  AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_HTTP D_CONFIGURE_WIP));
+
+  if (Webserver->hasArg(F("save"))) {
+    WipSaveSettings();
+    WebRestart(1);
+    return;
+  }
+
+  WSContentStart_P(PSTR(D_CONFIGURE_WIP));
+  WSContentSendStyle();
+
+  TemplateJson();
+  char stemp[strlen(TasmotaGlobal.mqtt_data) +1];
+  strlcpy(stemp, TasmotaGlobal.mqtt_data, sizeof(stemp));  // Get JSON template
+  WSContentSend_P(HTTP_FORM_WIP, stemp, (USER_MODULE == Settings.module) ? PSTR(" checked disabled") : "",
+    (Settings.flag.mqtt_enabled) ? PSTR(" checked") : "",   // SetOption3 - Enable MQTT
+    SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
+
+  WSContentSend_P(HTTP_FORM_END);
+  WSContentSpaceButton(BUTTON_CONFIGURATION);
+  WSContentStop();
+}
+
+void WipSaveSettings(void)
 {
   char tmp[300];   // Needs to hold complete ESP32 template of minimal 230 chars
   char webindex[5];

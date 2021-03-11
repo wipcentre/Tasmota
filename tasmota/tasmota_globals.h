@@ -380,7 +380,7 @@ const uint16_t LOG_BUFFER_SIZE = 4000;         // Max number of characters in lo
 #define COLOR_TEXT                  "#000"     // Global text color - Black
 #endif
 #ifndef COLOR_BACKGROUND
-#define COLOR_BACKGROUND            "#fff"     // Global background color - White
+#define COLOR_BACKGROUND            "#262120"     // Global background color - White
 #endif
 #ifndef COLOR_FORM
 #define COLOR_FORM                  "#f2f2f2"  // Form background color - Greyish
@@ -407,10 +407,10 @@ const uint16_t LOG_BUFFER_SIZE = 4000;         // Max number of characters in lo
 #define COLOR_BUTTON_TEXT           "#fff"     // Button text color - White
 #endif
 #ifndef COLOR_BUTTON
-#define COLOR_BUTTON                "#1fa3ec"  // Button color - Blueish
+#define COLOR_BUTTON                "#567b7a"  // Button color - Blueish
 #endif
 #ifndef COLOR_BUTTON_HOVER
-#define COLOR_BUTTON_HOVER          "#0e70a4"  // Button color when hovered over - Darker blueish
+#define COLOR_BUTTON_HOVER          "#486968"  // Button color when hovered over - Darker blueish
 #endif
 #ifndef COLOR_BUTTON_RESET
 #define COLOR_BUTTON_RESET          "#d43535"  // Restart/Reset/Delete button color - Redish

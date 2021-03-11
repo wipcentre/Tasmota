@@ -2,6 +2,7 @@ const char HTTP_HEADER1[] PROGMEM =
   "<!DOCTYPE html><html lang=\"%s\" class=\"\">"
   "<head>"
   "<meta charset='utf-8'>"
+  "<link href='https://fonts.googleapis.com/css2?family=Open+Sans&amp;display=swap' rel='stylesheet'>"
   "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,user-scalable=no\"/>"
   "<title>%s - %s</title>"
 
