@@ -2004,9 +2004,7 @@ void HandleWipConfiguration(void)
   TemplateJson();
   char stemp[strlen(TasmotaGlobal.mqtt_data) +1];
   strlcpy(stemp, TasmotaGlobal.mqtt_data, sizeof(stemp));  // Get JSON template
-  WSContentSend_P(HTTP_FORM_WIP, stemp, (USER_MODULE == Settings.module) ? PSTR(" checked disabled") : "",
-    (Settings.flag.mqtt_enabled) ? PSTR(" checked") : "",   // SetOption3 - Enable MQTT
-    SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
+  WSContentSend_P(HTTP_FORM_WIP, stemp,SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
 
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
@@ -2015,40 +2013,25 @@ void HandleWipConfiguration(void)
 
 void WipSaveSettings(void)
 {
-  char tmp[300];   // Needs to hold complete ESP32 template of minimal 230 chars
-  char webindex[5];
-  char friendlyname[TOPSZ];
+  char mx[10];
+  char mn[10]; 
+  char sn[10];  
   char message[MAX_LOGSZ];
 
-  WebGetArg(PSTR("dn"), tmp, sizeof(tmp));
-  SettingsUpdateText(SET_DEVICENAME, (!strlen(tmp)) ? "" : (!strcmp(tmp,"1")) ? SettingsText(SET_FRIENDLYNAME1) : tmp);
-  WebGetArg(PSTR("wp"), tmp, sizeof(tmp));
-  SettingsUpdateText(SET_WEBPWD, (!strlen(tmp)) ? "" : (strchr(tmp,'*')) ? SettingsText(SET_WEBPWD) : tmp);
-  Settings.flag.mqtt_enabled = Webserver->hasArg(F("b1"));  // SetOption3 - Enable MQTT
-#ifdef USE_EMULATION
-  UdpDisconnect();
-#if defined(USE_EMULATION_WEMO) || defined(USE_EMULATION_HUE)
-  WebGetArg(PSTR("b2"), tmp, sizeof(tmp));
-  Settings.flag2.emulation = (!strlen(tmp)) ? 0 : atoi(tmp);
-#endif  // USE_EMULATION_WEMO || USE_EMULATION_HUE
-#endif  // USE_EMULATION
+  WebGetArg(PSTR("mx"), mx, sizeof(mx));
+  WebGetArg(PSTR("mn"), mn, sizeof(mn));
+  WebGetArg(PSTR("sn"), sn, sizeof(sn));
 
-  snprintf_P(message, sizeof(message), PSTR(D_LOG_OTHER D_MQTT_ENABLE " %s, " D_CMND_EMULATION " %d, " D_CMND_DEVICENAME " %s, " D_CMND_FRIENDLYNAME),
-    GetStateText(Settings.flag.mqtt_enabled), Settings.flag2.emulation, SettingsText(SET_DEVICENAME));
-  for (uint32_t i = 0; i < MAX_FRIENDLYNAMES; i++) {
-    snprintf_P(webindex, sizeof(webindex), PSTR("a%d"), i);
-    WebGetArg(webindex, tmp, sizeof(tmp));
-    snprintf_P(friendlyname, sizeof(friendlyname), PSTR(FRIENDLY_NAME"%d"), i +1);
-    SettingsUpdateText(SET_FRIENDLYNAME1 +i, (!strlen(tmp)) ? (i) ? friendlyname : PSTR(FRIENDLY_NAME) : tmp);
-    snprintf_P(message, sizeof(message), PSTR("%s%s %s"), message, (i) ? "," : "", SettingsText(SET_FRIENDLYNAME1 +i));
-  }
+  //Construir rule
+  //RULE1 ON EZO#CarbonDioxide>=800 DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF 
+  //ENDON ON EZO#CarbonDioxide<=600 DO IF(var1==1) Power1 0; var1 2 ELSEIF(var1==0) var1 1 ENDIF ENDON
+  snprintf_P(message, sizeof(message), 
+      PSTR("RULE1 ON %s>=%s DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF ENDON ON %s<=%s DO IF(var1==1) Power1 0; var1 2 ELSEIF(var1==0) var1 1 ENDIF ENDON"),
+      sn,mx,sn,mn
+      );
+  ExecuteWebCommand(message, SRC_WEBGUI);
+  ExecuteWebCommand("RULE1 1", SRC_WEBGUI);
   AddLogData(LOG_LEVEL_INFO, message);
-
-  WebGetArg(PSTR("t1"), tmp, sizeof(tmp));
-  if (strlen(tmp)) {  // {"NAME":"12345678901234","GPIO":[255,255,255,255,255,255,255,255,255,255,255,255,255],"FLAG":255,"BASE":255}
-    snprintf_P(message, sizeof(message), PSTR(D_CMND_BACKLOG " " D_CMND_TEMPLATE " %s%s"), tmp, (Webserver->hasArg(F("t2"))) ? PSTR("; " D_CMND_MODULE " 0") : "");
-    ExecuteWebCommand(message, SRC_WEBGUI);
-  }
 }
 
 /*-------------------------------------------------------------------------------------------*/
