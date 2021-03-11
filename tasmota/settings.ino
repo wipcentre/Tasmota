@@ -752,6 +752,9 @@ void SettingsDefaultSet2(void) {
   SettingsUpdateText(SET_FRIENDLYNAME4, PSTR(FRIENDLY_NAME"4"));
   SettingsUpdateText(SET_DEVICENAME, SettingsText(SET_FRIENDLYNAME1));
   SettingsUpdateText(SET_OTAURL, PSTR(OTA_URL));
+  SettingsUpdateText(SET_SENSOR_WIP, "sn");
+  SettingsUpdateText(SET_MIN_WIP, "mn");
+  SettingsUpdateText(SET_MAX_WIP, "mx");
 
   // Power
   flag.save_state |= SAVE_STATE;
