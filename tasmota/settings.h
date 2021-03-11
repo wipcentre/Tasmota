@@ -355,7 +355,7 @@ struct {
 
   // Start of char array storing all parameter strings ********
 
-  char          text_pool[138];            // 017  Size is settings_text_size
+  char          text_pool[141];            // 017  Size is settings_text_size
   char          ex_sta_ssid[2][33];        // 0A1
   char          ex_sta_pwd[2][65];         // 0E3
   uint8_t       text_pool_165[132];        // 165

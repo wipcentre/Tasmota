@@ -2002,9 +2002,7 @@ void HandleWipConfiguration(void)
   WSContentSendStyle();
 
   TemplateJson();
-  char stemp[strlen(TasmotaGlobal.mqtt_data) +1];
-  strlcpy(stemp, TasmotaGlobal.mqtt_data, sizeof(stemp));  // Get JSON template
-  WSContentSend_P(HTTP_FORM_WIP, stemp,SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
+  WSContentSend_P(HTTP_FORM_WIP,SettingsText(SET_SENSOR_WIP),SettingsText(SET_MIN_WIP),SettingsText(SET_MAX_WIP));
 
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
@@ -2032,6 +2030,10 @@ void WipSaveSettings(void)
   ExecuteWebCommand(message, SRC_WEBGUI);
   ExecuteWebCommand("RULE1 1", SRC_WEBGUI);
   AddLogData(LOG_LEVEL_INFO, message);
+
+  SettingsUpdateText(SET_SENSOR_WIP, sn);
+  SettingsUpdateText(SET_MIN_WIP, mn);
+  SettingsUpdateText(SET_MAX_WIP, mx);
 }
 
 /*-------------------------------------------------------------------------------------------*/
