@@ -339,7 +339,7 @@ typedef union {
   };
 } DisplayOptions;
 
-const uint32_t settings_text_size = 699;   // Settings.text_pool[size] = Settings.display_model (2D2) - Settings.text_pool (017)
+const uint32_t settings_text_size = 702;   // Settings.text_pool[size] = Settings.display_model (2D2) - Settings.text_pool (017)
 const uint8_t MAX_TUYA_FUNCTIONS = 16;
 
 struct {
