@@ -970,7 +970,7 @@ enum SupportedModules {
   SONOFF_S31, ZENGGE_ZF_WF017, SONOFF_POW_R2, SONOFF_IFAN02, BLITZWOLF_BWSHP, SHELLY1, SHELLY2, PHILIPS, NEO_COOLCAM, ESP_SWITCH,
   OBI, TECKIN, APLIC_WDP303075, TUYA_DIMMER, GOSUND, ARMTRONIX_DIMMERS, SK03_TUYA, PS_16_DZ, TECKIN_US, MANZOKU_EU_4,
   OBI2, YTF_IR_BRIDGE, DIGOO, KA10, ZX2820, MI_DESK_LAMP, SP10, WAGA, SYF05, SONOFF_L1,
-  SONOFF_IFAN03, EXS_DIMMER, PWM_DIMMER, SONOFF_D1, SONOFF_ZB_BRIDGE,
+  SONOFF_IFAN03, EXS_DIMMER, PWM_DIMMER, SONOFF_D1, SONOFF_ZB_BRIDGE, WIP_MODULE,
   MAXMODULE };
 
 const char kModuleNames[] PROGMEM =
@@ -981,7 +981,7 @@ const char kModuleNames[] PROGMEM =
   "Sonoff S31|Zengge WF017|Sonoff Pow R2|Sonoff iFan02|BlitzWolf SHP|Shelly 1|Shelly 2|Xiaomi Philips|Neo Coolcam|ESP Switch|"
   "OBI Socket|Teckin|AplicWDP303075|Tuya MCU|Gosund SP1 v23|ARMTR Dimmer|SK03 Outdoor|PS-16-DZ|Teckin US|Manzoku strip|"
   "OBI Socket 2|YTF IR Bridge|Digoo DG-SP202|KA10|Luminea ZX2820|Mi Desk Lamp|SP10|WAGA CHCZ02MB|SYF05|Sonoff L1|"
-  "Sonoff iFan03|EXS Dimmer|PWM Dimmer|Sonoff D1|Sonoff ZbBridge"
+  "Sonoff iFan03|EXS Dimmer|PWM Dimmer|Sonoff D1|Sonoff ZbBridge|WIP Module"
   ;
 
 const uint8_t kModuleNiceList[] PROGMEM = {
@@ -1083,7 +1083,8 @@ const uint8_t kModuleNiceList[] PROGMEM = {
   SYF05,
   YTF_IR_BRIDGE,
   WITTY,               // Development Devices
-  WEMOS
+  WEMOS,
+  WIP_MODULE
 };
 
 enum SupportedTemplates8285 {
@@ -1094,7 +1095,7 @@ enum SupportedTemplates8285 {
   TMP_SONOFF_POW_R2, TMP_BLITZWOLF_BWSHP, TMP_SHELLY1, TMP_SHELLY2, TMP_PHILIPS, TMP_NEO_COOLCAM, TMP_ESP_SWITCH, TMP_OBI,
   TMP_TECKIN, TMP_APLIC_WDP303075, TMP_TUYA_DIMMER, TMP_GOSUND, TMP_ARMTRONIX_DIMMERS, TMP_SK03_TUYA, TMP_PS_16_DZ,
   TMP_TECKIN_US, TMP_MANZOKU_EU_4, TMP_OBI2, TMP_YTF_IR_BRIDGE, TMP_DIGOO, TMP_KA10, TMP_ZX2820, TMP_MI_DESK_LAMP, TMP_SP10,
-  TMP_WAGA, TMP_SYF05, TMP_EXS_DIMMER, TMP_PWM_DIMMER, TMP_SONOFF_ZB_BRIDGE,
+  TMP_WAGA, TMP_SYF05, TMP_EXS_DIMMER, TMP_PWM_DIMMER, TMP_SONOFF_ZB_BRIDGE,TMP_WIP_MODULE,
   TMP_MAXMODULE_8285 };
 
 enum SupportedTemplates8266 {
@@ -1177,6 +1178,7 @@ const uint8_t kModuleTemplateList[MAXMODULE] PROGMEM = {
   TMP_PWM_DIMMER,
   TMP_SONOFF_DUAL,      // SONOFF_D1
   TMP_SONOFF_ZB_BRIDGE,
+  TMP_WIP_MODULE
   };
 
 /*********************************************************************************************\
@@ -2244,6 +2246,26 @@ const mytmplt8266 kModules8266[TMP_MAXMODULE_8285] PROGMEM = {
     0,                  // GPIO15 connected to IO15 pad, also used for logging
     GPI8_KEY1,          // GPIO16 Button
     0
+  },
+  {                     // WIP Module
+    0,                  // GPIO00 Button
+    0,                  // GPIO01 Serial RXD and Optional sensor
+    0,                  // GPIO02 Only available on newer Sonoff Basic R2 V1
+    0,                  // GPIO03 Serial TXD and Optional sensor
+    GPI8_I2C_SDA,       // GPIO04 Optional sensor
+    GPI8_I2C_SCL,       // GPIO05
+                        // GPIO06 (SD_CLK   Flash)
+                        // GPIO07 (SD_DATA0 Flash QIO/DIO/DOUT)
+                        // GPIO08 (SD_DATA1 Flash QIO/DIO/DOUT)
+                        // GPIO09 (SD_DATA2 Flash QIO or ESP8285)
+                        // GPIO10 (SD_DATA3 Flash QIO or ESP8285)
+                        // GPIO11 (SD_CMD   Flash)
+    0,                  // GPIO12 Red Led and Relay (0 = Off, 1 = On)
+    GPI8_REL1,          // GPIO13 Green Led (0 = On, 1 = Off) - Link and Power status
+    0,                  // GPIO14 Optional sensor
+    0,                  // GPIO15
+    GPI8_REL2,          // GPIO16
+    0                   // ADC0 Analog input
   }
 };
 

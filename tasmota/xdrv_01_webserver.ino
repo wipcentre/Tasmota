@@ -294,9 +294,9 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;Sensor&nbsp;</b></legend>"
   "<form method='get' action='wk'>"
   "<br>"
-  "<label>Max Value</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
+  "<label>Max Value</label><br><input id='mx' placeholder=\"\" value=\"%s\"><br>"
   "<br>"
-  "<label>Min Value</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
+  "<label>Min Value</label><br><input id='mn' placeholder=\"\" value=\"%s\"><br>"
   "<br>";
 
 const char HTTP_FORM_END[] PROGMEM =
@@ -1988,6 +1988,12 @@ void OtherSaveSettings(void)
 
 void HandleWipConfiguration(void)
 {
+  char min[5];
+  char max[5];
+
+  snprintf(min, 5, "%d", Settings.sensor_min_wip);
+  snprintf(max, 5, "%d", Settings.sensor_max_wip);
+
   if (!HttpCheckPriviledgedAccess()) { return; }
 
   AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_HTTP D_CONFIGURE_WIP));
@@ -2002,8 +2008,7 @@ void HandleWipConfiguration(void)
   WSContentSendStyle();
 
   TemplateJson();
-  WSContentSend_P(HTTP_FORM_WIP,Settings.sensor_min_wip,Settings.sensor_max_wip,Settings.sensor_name_wip);
-
+  WSContentSend_P(HTTP_FORM_WIP,max,min);
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
   WSContentStop();
@@ -2033,6 +2038,7 @@ void WipSaveSettings(void)
 
   Settings.sensor_min_wip = (uint16_t)atoi(mn);
   Settings.sensor_max_wip = (uint16_t)atoi(mx);
+  
   strcpy(Settings.sensor_name_wip , sn);
 }
 
