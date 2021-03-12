@@ -291,21 +291,23 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<br>";
 
   const char HTTP_FORM_WIP[] PROGMEM =
-  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;Sensor&nbsp;</b></legend>"
-  "<form method='get' action='wk'>"
-  "<br>"
-  "<select id='sn' name='sn'>"
-  "<option value='EZO#CarbonDioxide'>" D_JSON_CO2 "</option>"
-  "<option value='EZO#PH'>" D_JSON_PH "</option>"
-  "<option value='EZO#ORP'>" D_JSON_ORP "</option>"
-  "<option value='EZO#DisolvedOxygen'>" D_JSON_DO "</option>"
-  "<option value='EZO#EC'>" D_JSON_EC "</option>"
-  "</select></p>"
   "<br>"
   "<label>Max Value</label><br><input id='mx' placeholder=\"\" value=\"%s\"><br>"
   "<br>"
   "<label>Min Value</label><br><input id='mn' placeholder=\"\" value=\"%s\"><br>"
   "<br>";
+
+  const char HTTP_SENSOR_DD_WIP[] PROGMEM = 
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;Sensor&nbsp;</b></legend>"
+  "<form method='get' action='wk'>"
+  "<br>"
+  "<select id='sn' name='sn'>"
+  "<option value='EZO#CarbonDioxide'%s>" D_JSON_CO2 "</option>"
+  "<option value='EZO#PH'%s>" D_JSON_PH "</option>"
+  "<option value='EZO#ORP'%s>" D_JSON_ORP "</option>"
+  "<option value='EZO#DisolvedOxygen'%s>" D_JSON_DO "</option>"
+  "<option value='EZO#EC'%s>" D_JSON_EC "</option>"
+  "</select></p>";
 
 const char HTTP_FORM_END[] PROGMEM =
   "<br>"
@@ -1998,9 +2000,12 @@ void HandleWipConfiguration(void)
 {
   char min[5];
   char max[5];
+  char sn[21];
+  uint8_t pos;
 
   snprintf(min, 5, "%d", Settings.sensor_min_wip);
   snprintf(max, 5, "%d", Settings.sensor_max_wip);
+  snprintf(sn, 21, "%s", Settings.sensor_name_wip);
 
   if (!HttpCheckPriviledgedAccess()) { return; }
 
@@ -2015,7 +2020,31 @@ void HandleWipConfiguration(void)
   WSContentStart_P(PSTR(D_CONFIGURE_WIP));
   WSContentSendStyle();
 
+  pos = 0;
+  if(strcmp(sn,"EZO#CarbonDioxide") == 0){
+    pos = 0;
+  }
+  else if(strcmp(sn,"EZO#PH") == 0){
+    pos = 1;
+  }
+  else if(strcmp(sn,"EZO#ORP") == 0){
+    pos = 2;
+  }
+  else if(strcmp(sn,"EZO#DisolvedOxygen") == 0){
+    pos = 3;
+  }
+  else if(strcmp(sn,"EZO#EC") == 0){
+    pos = 4;
+  }
+
   TemplateJson();
+  WSContentSend_P(HTTP_SENSOR_DD_WIP,
+  pos==0 ? PSTR(" selected"):"",
+  pos==1 ? PSTR(" selected"):"",
+  pos==2 ? PSTR(" selected"):"",
+  pos==3 ? PSTR(" selected"):"",
+  pos==4 ? PSTR(" selected"):""
+  );
   WSContentSend_P(HTTP_FORM_WIP,max,min);
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
@@ -2046,7 +2075,6 @@ void WipSaveSettings(void)
 
   Settings.sensor_min_wip = (uint16_t)atoi(mn);
   Settings.sensor_max_wip = (uint16_t)atoi(mx);
-  
   strcpy(Settings.sensor_name_wip , sn);
 }
 
