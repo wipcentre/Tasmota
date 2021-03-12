@@ -294,6 +294,14 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;Sensor&nbsp;</b></legend>"
   "<form method='get' action='wk'>"
   "<br>"
+  "<select id='sn' name='sn'>"
+  "<option value='EZO#CarbonDioxide'>" D_JSON_CO2 "</option>"
+  "<option value='EZO#PH'>" D_JSON_PH "</option>"
+  "<option value='EZO#ORP'>" D_JSON_ORP "</option>"
+  "<option value='EZO#DisolvedOxygen'>" D_JSON_DO "</option>"
+  "<option value='EZO#EC'>" D_JSON_EC "</option>"
+  "</select></p>"
+  "<br>"
   "<label>Max Value</label><br><input id='mx' placeholder=\"\" value=\"%s\"><br>"
   "<br>"
   "<label>Min Value</label><br><input id='mn' placeholder=\"\" value=\"%s\"><br>"
@@ -356,7 +364,7 @@ const char kButtonTitle[] PROGMEM =
 const char kButtonAction[] PROGMEM =
   ".|rt|"
   ".|cn|in|up|cs|"
-  "wk|md|wi|lg|co|tp|dl|rs|wk";
+  "wk|md|wi|lg|co|tp|dl|rs";
 const char kButtonConfirm[] PROGMEM = D_CONFIRM_RESTART "|" D_CONFIRM_RESET_CONFIGURATION;
 
 enum CTypes { CT_HTML, CT_PLAIN, CT_XML, CT_STREAM, CT_APP_JSON, CT_APP_STREAM };
@@ -2017,8 +2025,8 @@ void HandleWipConfiguration(void)
 void WipSaveSettings(void)
 {
   char mx[10];
-  char mn[10]; 
-  char sn[21];  
+  char mn[10];
+  char sn[21];
   char message[MAX_LOGSZ];
 
   WebGetArg(PSTR("mx"), mx, sizeof(mx));
