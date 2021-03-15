@@ -291,23 +291,34 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<br>";
 
   const char HTTP_FORM_WIP[] PROGMEM =
-  "<br>"
-  "<label>Max Value</label><br><input id='mx' placeholder=\"\" value=\"%s\"><br>"
-  "<br>"
-  "<label>Min Value</label><br><input id='mn' placeholder=\"\" value=\"%s\"><br>"
-  "<br>";
+  "<p>Max Value</p><input id='mx1' placeholder=\"\" value=\"%s\"><input id='mx2' placeholder=\"\" value=\"%s\">"
+  "<p>Min Value</p><input id='mn1' placeholder=\"\" value=\"%s\"><input id='mn2' placeholder=\"\" value=\"%s\"><br>"
+  "<p><button name='clean' type='submit' class='button bred'>Clean Rule</button></p>"
+  "<script>function rl(){"
+  "if(ry.value==='1'){document.getElementById('sn2').style.display='none';document.getElementById('mx2').style.display='none';document.getElementById('mn2').style.display='none';document.getElementById('sn1').style.display='block';document.getElementById('mx1').style.display='block';document.getElementById('mn1').style.display='block';}"
+  "if(ry.value==='2'){document.getElementById('sn1').style.display='none';document.getElementById('mx1').style.display='none';document.getElementById('mn1').style.display='none';document.getElementById('sn2').style.display='block';document.getElementById('mx2').style.display='block';document.getElementById('mn2').style.display='block';}"
+  "};rl();</script>";
 
   const char HTTP_SENSOR_DD_WIP[] PROGMEM = 
-  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>&nbsp;Sensor&nbsp;</b></legend>"
+  "<div style='border:1px solid gray;padding:10px 24px;'><legend><b>Sensor</b></legend>"
   "<form method='get' action='wk'>"
-  "<br>"
-  "<select id='sn' name='sn'>"
+  "<p>Relay</p><select id='ry' name='ry' onchange='rl()'>"
+  "<option value='1'>Relay 1</option>"
+  "<option value='2'>Relay 2</option>"
+  "</select>"
+  "<p>Sensor</p><select id='sn1' name='sn1'>"
   "<option value='EZO#CarbonDioxide'%s>" D_JSON_CO2 "</option>"
   "<option value='EZO#PH'%s>" D_JSON_PH "</option>"
   "<option value='EZO#ORP'%s>" D_JSON_ORP "</option>"
   "<option value='EZO#DisolvedOxygen'%s>" D_JSON_DO "</option>"
   "<option value='EZO#EC'%s>" D_JSON_EC "</option>"
-  "</select></p>";
+  "</select><select id='sn2' name='sn2'>"
+  "<option value='EZO#CarbonDioxide'%s>" D_JSON_CO2 "</option>"
+  "<option value='EZO#PH'%s>" D_JSON_PH "</option>"
+  "<option value='EZO#ORP'%s>" D_JSON_ORP "</option>"
+  "<option value='EZO#DisolvedOxygen'%s>" D_JSON_DO "</option>"
+  "<option value='EZO#EC'%s>" D_JSON_EC "</option>"
+  "</select>";
 
 const char HTTP_FORM_END[] PROGMEM =
   "<br>"
@@ -2017,6 +2028,12 @@ void HandleWipConfiguration(void)
     return;
   }
 
+  if (Webserver->hasArg(F("clean"))) {
+    WipCleanRule();
+    WebRestart(1);
+    return;
+  }
+
   WSContentStart_P(PSTR(D_CONFIGURE_WIP));
   WSContentSendStyle();
 
@@ -2043,9 +2060,14 @@ void HandleWipConfiguration(void)
   pos==1 ? PSTR(" selected"):"",
   pos==2 ? PSTR(" selected"):"",
   pos==3 ? PSTR(" selected"):"",
+  pos==4 ? PSTR(" selected"):"",
+  pos==0 ? PSTR(" selected"):"",
+  pos==1 ? PSTR(" selected"):"",
+  pos==2 ? PSTR(" selected"):"",
+  pos==3 ? PSTR(" selected"):"",
   pos==4 ? PSTR(" selected"):""
   );
-  WSContentSend_P(HTTP_FORM_WIP,max,min);
+  WSContentSend_P(HTTP_FORM_WIP,max,max,min,min);
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
   WSContentStop();
@@ -2076,6 +2098,18 @@ void WipSaveSettings(void)
   Settings.sensor_min_wip = (uint16_t)atoi(mn);
   Settings.sensor_max_wip = (uint16_t)atoi(mx);
   strcpy(Settings.sensor_name_wip , sn);
+}
+
+void WipCleanRule(void)
+{
+  char message[MAX_LOGSZ];
+
+  ExecuteWebCommand("RULE1 \"", SRC_WEBGUI);
+  ExecuteWebCommand("RULE1 0", SRC_WEBGUI);
+  AddLogData(LOG_LEVEL_INFO, message);
+
+  Settings.sensor_min_wip = (uint16_t)0;
+  Settings.sensor_max_wip = (uint16_t)0;
 }
 
 /*-------------------------------------------------------------------------------------------*/
