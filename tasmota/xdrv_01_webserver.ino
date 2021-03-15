@@ -2010,13 +2010,18 @@ void OtherSaveSettings(void)
 void HandleWipConfiguration(void)
 {
   char min[5];
+  char min2[5];
   char max[5];
-  char sn[21];
-  uint8_t pos;
+  char max2[5];
+  uint8_t sn;
+  uint8_t sn2;
 
   snprintf(min, 5, "%d", Settings.sensor_min_wip);
   snprintf(max, 5, "%d", Settings.sensor_max_wip);
-  snprintf(sn, 21, "%s", Settings.sensor_name_wip);
+  snprintf(min2, 5, "%d", Settings.sensor_min_wip2);
+  snprintf(max2, 5, "%d", Settings.sensor_max_wip2);
+  sn = Settings.sensor_pos_wip;
+  sn2 = Settings.sensor_pos_wip2;
 
   if (!HttpCheckPriviledgedAccess()) { return; }
 
@@ -2037,6 +2042,57 @@ void HandleWipConfiguration(void)
   WSContentStart_P(PSTR(D_CONFIGURE_WIP));
   WSContentSendStyle();
 
+  TemplateJson();
+  WSContentSend_P(HTTP_SENSOR_DD_WIP,
+  sn==0 ? PSTR(" selected"):"",
+  sn==1 ? PSTR(" selected"):"",
+  sn==2 ? PSTR(" selected"):"",
+  sn==3 ? PSTR(" selected"):"",
+  sn==4 ? PSTR(" selected"):"",
+  sn2==0 ? PSTR(" selected"):"",
+  sn2==1 ? PSTR(" selected"):"",
+  sn2==2 ? PSTR(" selected"):"",
+  sn2==3 ? PSTR(" selected"):"",
+  sn2==4 ? PSTR(" selected"):""
+  );
+  WSContentSend_P(HTTP_FORM_WIP,max,max,min,min);
+  WSContentSend_P(HTTP_FORM_END);
+  WSContentSpaceButton(BUTTON_CONFIGURATION);
+  WSContentStop();
+}
+
+void WipSaveSettings(void)
+{
+  char mx[10];
+  char mn[10];
+  char mx2[10];
+  char mn2[10];
+  char sn[18];
+  char sn2[18];
+  char message[MAX_LOGSZ];
+  uint8_t pos;
+
+  WebGetArg(PSTR("mx1"), mx, sizeof(mx));
+  WebGetArg(PSTR("mn1"), mn, sizeof(mn));
+  WebGetArg(PSTR("sn1"), sn, sizeof(sn));
+  WebGetArg(PSTR("mx2"), mx, sizeof(mx2));
+  WebGetArg(PSTR("mn2"), mn, sizeof(mn2));
+  WebGetArg(PSTR("sn2"), sn, sizeof(sn2));
+
+  //Construir rule
+  //RULE1 ON EZO#CarbonDioxide>=800 DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF 
+  //ENDON ON EZO#CarbonDioxide<=600 DO IF(var1==1) Power1 0; var1 2 ELSEIF(var1==0) var1 1 ENDIF ENDON
+  snprintf_P(message, sizeof(message), 
+      PSTR("RULE1 ON %s>=%s DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF ENDON ON %s<=%s DO IF(var1==1) Power1 0; var1 2 ELSEIF(var1==0) var1 1 ENDIF ENDON"),
+      sn,mx,sn,mn
+      );
+  ExecuteWebCommand(message, SRC_WEBGUI);
+  ExecuteWebCommand("RULE1 1", SRC_WEBGUI);
+  AddLogData(LOG_LEVEL_INFO, message);
+
+  Settings.sensor_min_wip = (uint16_t)atoi(mn);
+  Settings.sensor_max_wip = (uint16_t)atoi(mx);
+
   pos = 0;
   if(strcmp(sn,"EZO#CarbonDioxide") == 0){
     pos = 0;
@@ -2053,51 +2109,28 @@ void HandleWipConfiguration(void)
   else if(strcmp(sn,"EZO#EC") == 0){
     pos = 4;
   }
+  Settings.sensor_pos_wip = pos;
 
-  TemplateJson();
-  WSContentSend_P(HTTP_SENSOR_DD_WIP,
-  pos==0 ? PSTR(" selected"):"",
-  pos==1 ? PSTR(" selected"):"",
-  pos==2 ? PSTR(" selected"):"",
-  pos==3 ? PSTR(" selected"):"",
-  pos==4 ? PSTR(" selected"):"",
-  pos==0 ? PSTR(" selected"):"",
-  pos==1 ? PSTR(" selected"):"",
-  pos==2 ? PSTR(" selected"):"",
-  pos==3 ? PSTR(" selected"):"",
-  pos==4 ? PSTR(" selected"):""
-  );
-  WSContentSend_P(HTTP_FORM_WIP,max,max,min,min);
-  WSContentSend_P(HTTP_FORM_END);
-  WSContentSpaceButton(BUTTON_CONFIGURATION);
-  WSContentStop();
-}
+  Settings.sensor_min_wip2 = (uint16_t)atoi(mn2);
+  Settings.sensor_max_wip2 = (uint16_t)atoi(mx2);
 
-void WipSaveSettings(void)
-{
-  char mx[10];
-  char mn[10];
-  char sn[21];
-  char message[MAX_LOGSZ];
-
-  WebGetArg(PSTR("mx"), mx, sizeof(mx));
-  WebGetArg(PSTR("mn"), mn, sizeof(mn));
-  WebGetArg(PSTR("sn"), sn, sizeof(sn));
-
-  //Construir rule
-  //RULE1 ON EZO#CarbonDioxide>=800 DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF 
-  //ENDON ON EZO#CarbonDioxide<=600 DO IF(var1==1) Power1 0; var1 2 ELSEIF(var1==0) var1 1 ENDIF ENDON
-  snprintf_P(message, sizeof(message), 
-      PSTR("RULE1 ON %s>=%s DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF ENDON ON %s<=%s DO IF(var1==1) Power1 0; var1 2 ELSEIF(var1==0) var1 1 ENDIF ENDON"),
-      sn,mx,sn,mn
-      );
-  ExecuteWebCommand(message, SRC_WEBGUI);
-  ExecuteWebCommand("RULE1 1", SRC_WEBGUI);
-  AddLogData(LOG_LEVEL_INFO, message);
-
-  Settings.sensor_min_wip = (uint16_t)atoi(mn);
-  Settings.sensor_max_wip = (uint16_t)atoi(mx);
-  strcpy(Settings.sensor_name_wip , sn);
+  pos = 0;
+  if(strcmp(sn2,"EZO#CarbonDioxide") == 0){
+    pos = 0;
+  }
+  else if(strcmp(sn2,"EZO#PH") == 0){
+    pos = 1;
+  }
+  else if(strcmp(sn2,"EZO#ORP") == 0){
+    pos = 2;
+  }
+  else if(strcmp(sn2,"EZO#DisolvedOxygen") == 0){
+    pos = 3;
+  }
+  else if(strcmp(sn2,"EZO#EC") == 0){
+    pos = 4;
+  }
+  Settings.sensor_pos_wip2 = pos;
 }
 
 void WipCleanRule(void)
