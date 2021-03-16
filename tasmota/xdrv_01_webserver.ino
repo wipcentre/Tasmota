@@ -2055,7 +2055,7 @@ void HandleWipConfiguration(void)
   sn2==3 ? PSTR(" selected"):"",
   sn2==4 ? PSTR(" selected"):""
   );
-  WSContentSend_P(HTTP_FORM_WIP,max,max,min,min);
+  WSContentSend_P(HTTP_FORM_WIP,max,max2,min,min2);
   WSContentSend_P(HTTP_FORM_END);
   WSContentSpaceButton(BUTTON_CONFIGURATION);
   WSContentStop();
@@ -2075,9 +2075,9 @@ void WipSaveSettings(void)
   WebGetArg(PSTR("mx1"), mx, sizeof(mx));
   WebGetArg(PSTR("mn1"), mn, sizeof(mn));
   WebGetArg(PSTR("sn1"), sn, sizeof(sn));
-  WebGetArg(PSTR("mx2"), mx, sizeof(mx2));
-  WebGetArg(PSTR("mn2"), mn, sizeof(mn2));
-  WebGetArg(PSTR("sn2"), sn, sizeof(sn2));
+  WebGetArg(PSTR("mx2"), mx2, sizeof(mx2));
+  WebGetArg(PSTR("mn2"), mn2, sizeof(mn2));
+  WebGetArg(PSTR("sn2"), sn2, sizeof(sn2));
 
   //Construir rule
   //RULE1 ON EZO#CarbonDioxide>=800 DO IF(var1==0) Power1 1 ELSE var1 0 ENDIF 
@@ -2088,6 +2088,14 @@ void WipSaveSettings(void)
       );
   ExecuteWebCommand(message, SRC_WEBGUI);
   ExecuteWebCommand("RULE1 1", SRC_WEBGUI);
+  AddLogData(LOG_LEVEL_INFO, message);
+
+  snprintf_P(message, sizeof(message), 
+      PSTR("RULE2 ON %s>=%s DO IF(var2==0) Power2 1 ELSE var2 0 ENDIF ENDON ON %s<=%s DO IF(var2==1) Power2 0; var2 2 ELSEIF(var2==0) var2 1 ENDIF ENDON"),
+      sn2,mx2,sn2,mn2
+      );
+  ExecuteWebCommand(message, SRC_WEBGUI);
+  ExecuteWebCommand("RULE2 1", SRC_WEBGUI);
   AddLogData(LOG_LEVEL_INFO, message);
 
   Settings.sensor_min_wip = (uint16_t)atoi(mn);
@@ -2135,14 +2143,27 @@ void WipSaveSettings(void)
 
 void WipCleanRule(void)
 {
+  char ry[10];
   char message[MAX_LOGSZ];
 
-  ExecuteWebCommand("RULE1 \"", SRC_WEBGUI);
-  ExecuteWebCommand("RULE1 0", SRC_WEBGUI);
-  AddLogData(LOG_LEVEL_INFO, message);
+  WebGetArg(PSTR("ry"), ry, sizeof(ry));
 
-  Settings.sensor_min_wip = (uint16_t)0;
-  Settings.sensor_max_wip = (uint16_t)0;
+  if(strcmp(ry,"1") == 0){
+    ExecuteWebCommand("RULE1 \"", SRC_WEBGUI);
+    ExecuteWebCommand("RULE1 0", SRC_WEBGUI);
+    AddLogData(LOG_LEVEL_INFO, message);
+
+    Settings.sensor_min_wip = (uint16_t)0;
+    Settings.sensor_max_wip = (uint16_t)0;
+  }
+  else if(strcmp(ry,"2") == 0){
+    ExecuteWebCommand("RULE2 \"", SRC_WEBGUI);
+    ExecuteWebCommand("RULE2 0", SRC_WEBGUI);
+    AddLogData(LOG_LEVEL_INFO, message);
+
+    Settings.sensor_min_wip2 = (uint16_t)0;
+    Settings.sensor_max_wip2 = (uint16_t)0;
+  }
 }
 
 /*-------------------------------------------------------------------------------------------*/
