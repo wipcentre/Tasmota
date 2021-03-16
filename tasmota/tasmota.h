@@ -30,7 +30,7 @@
  * Default sensor states
 \*********************************************************************************************/
 
-#define CODE_IMAGE_STR "tasmota"
+#define CODE_IMAGE_STR "wip"
 
 #define USE_LIGHT                           // Enable light control
 #define USE_ENERGY_SENSOR                   // Use energy sensors (+14k code)
@@ -350,7 +350,7 @@ enum SettingsTextIndex { SET_OTAURL,
                          SET_SWITCH_TXT25, SET_SWITCH_TXT26, SET_SWITCH_TXT27, SET_SWITCH_TXT28,  // MAX_SWITCHES_TXT
 #endif  // ESP32
                          SET_SHD_PARAM,
-                         SET_MAX };
+                         SET_MAX};
 
 enum SpiInterfaces { SPI_NONE, SPI_MOSI, SPI_MISO, SPI_MOSI_MISO };
 
