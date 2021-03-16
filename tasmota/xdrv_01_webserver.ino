@@ -2155,6 +2155,7 @@ void WipCleanRule(void)
 
     Settings.sensor_min_wip = (uint16_t)0;
     Settings.sensor_max_wip = (uint16_t)0;
+    Settings.sensor_pos_wip = (uint16_t)0;
   }
   else if(strcmp(ry,"2") == 0){
     ExecuteWebCommand("RULE2 \"", SRC_WEBGUI);
@@ -2163,6 +2164,7 @@ void WipCleanRule(void)
 
     Settings.sensor_min_wip2 = (uint16_t)0;
     Settings.sensor_max_wip2 = (uint16_t)0;
+    Settings.sensor_pos_wip2 = (uint16_t)0;
   }
 }
 
